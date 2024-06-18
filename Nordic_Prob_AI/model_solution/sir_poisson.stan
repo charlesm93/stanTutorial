@@ -28,11 +28,9 @@ data {
 parameters {
   real<lower=0> gamma;
   real<lower=0> beta;
-  real<lower=0> phi_inv;
 }
 
 transformed parameters {
-  real phi = 1. / phi_inv;
   array[n_days] vector[3] y = ode_rk45(sir, y0, t0, ts, beta, gamma, N);
 }
 
@@ -40,8 +38,7 @@ model {
   //priors
   beta ~ normal(2, 1);
   gamma ~ normal(0.4, 0.5);
-  phi_inv ~ exponential(5);
-  
+
   cases ~ poisson(y[,2]);
 }
 
